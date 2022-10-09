@@ -37,11 +37,9 @@ public class TicketController {
 	// gets all tickets
 	@GetMapping("/allTickets")
 	public ResponseEntity<List<Ticket>> getAllTickets(@RequestParam(required = false) Integer packageId,@RequestParam(required = false) String authKey) throws InvalidTicketException {
-		List<Ticket> tickets = null;
-		
-		tickets = ticketService.getAllTickets(packageId,authKey);
+		List<Ticket> tickets = ticketService.getAllTickets(packageId,authKey);
 				
-		return new ResponseEntity<List<Ticket>>(tickets,HttpStatus.FOUND);
+		return new ResponseEntity<List<Ticket>>(tickets,HttpStatus.OK);
 	}
 	
 	// gets specific ticket

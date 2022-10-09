@@ -1,10 +1,9 @@
 package app.trip.models;
 
 public enum BusType {
-
-
 	SingleDecker,
 	DoubleDecker,
-	TripleDecker;
-	
+	TripleDecker,
+	AC_SingleDecker,
+	AC_DoubleDecker;
 }

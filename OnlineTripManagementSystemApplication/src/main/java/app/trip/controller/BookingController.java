@@ -48,14 +48,14 @@ public class BookingController {
 	public ResponseEntity<List<Booking>> viewBookings(@RequestParam(required = false) Integer userId) throws BookingException{
 		List<Booking> bookings = null;
 		bookings = bookingService.viewBookings(userId);
-		return new ResponseEntity<List<Booking>>(bookings, HttpStatus.FOUND);
+		return new ResponseEntity<List<Booking>>(bookings, HttpStatus.OK);
 	}
 	
 	@GetMapping("/showAllBooking")
 	public ResponseEntity<List<Booking>> viewBookings(@RequestParam(required = false) String authKey) throws BookingException{
 		List<Booking> bookings = null;
 		bookings = bookingService.viewAllBookings(authKey);
-		return new ResponseEntity<List<Booking>>(bookings, HttpStatus.FOUND);
+		return new ResponseEntity<List<Booking>>(bookings, HttpStatus.OK);
 	}
 	
 }

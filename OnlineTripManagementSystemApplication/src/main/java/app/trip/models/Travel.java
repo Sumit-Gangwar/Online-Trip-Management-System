@@ -12,8 +12,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.ToString;
@@ -29,16 +31,18 @@ public class Travel {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer travelId;
 	
-//	@Size(min=3,max=9,message="length should be atleat 3 character")
+	@Size(min=3,message="Travel name shouldn't be less than 3 characters")
 	private String travelName;
 	
-//	@Size(min=3,max=10,message="{name.invalid}")
+	@Size(min=3,max=10,message="Agent name shouldn't be less than 3 characters")
 	private String agentName;
 	
 	@Embedded
 	private Address addr;
 	
-	private Integer contact;
+	@Pattern(regexp = "[0-9]{10}", message = "Contact should be of 10 digits")
+	@NotNull
+	private String contact;
 	
     
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="tDetails",fetch=FetchType.EAGER)

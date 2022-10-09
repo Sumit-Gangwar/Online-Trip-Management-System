@@ -17,6 +17,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,10 +30,10 @@ public class Packages {
 	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer packageId;
 	
-	@Column(length = 45) @NotNull @NotBlank @NotEmpty
+	@Size(min = 5, message = "Package name shouldn't be less than 5 characters") @NotNull @NotBlank @NotEmpty
 	private String packageName;
 	
-	@Column(length = 45) @NotNull @NotBlank @NotEmpty
+	@Size(min = 5,message = "Description shouldn't be less than 5 characters") @NotNull @NotBlank @NotEmpty
 	private String packageDescription;
 	
 	@Enumerated(EnumType.ORDINAL)
@@ -41,7 +42,7 @@ public class Packages {
 	@NotNull @Min(0)
 	private Integer packageCost;
 	
-	@NotNull @NotBlank @NotEmpty @Column(length = 45)
+	@NotNull @NotBlank @NotEmpty @Size(min = 3,message = "Payment Details shouldn't be less than 3 characteres")
 	private String paymentDetails;
 	
 	@JsonIgnore
