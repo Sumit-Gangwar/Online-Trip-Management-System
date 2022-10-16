@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,6 +53,12 @@ public class UserController {
 	public ResponseEntity<String> updateUser(@Valid @RequestBody User user)throws InvalidCredentialException{
 		 service.updateUser(user);
 		return new ResponseEntity<String>("User updated successfully...",HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/get")
+	public ResponseEntity<User> getUser(@RequestParam String authKey)throws InvalidCredentialException{
+		User user = service.getUser(authKey);
+		return new ResponseEntity<>(user,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete")

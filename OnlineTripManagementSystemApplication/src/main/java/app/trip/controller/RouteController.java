@@ -1,5 +1,6 @@
 package app.trip.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -7,10 +8,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,14 +38,14 @@ public class RouteController {
 	public ResponseEntity<Route> searchRoute(@RequestParam Integer routeId) throws InvalidRouteException {
 		Route route = routeService.searchRoute(routeId);
 		
-		return new ResponseEntity<Route>(route, HttpStatus.FOUND);
+		return new ResponseEntity<Route>(route, HttpStatus.OK);
 	}
 	
 	@GetMapping("/seeAllRoutes")
 	public ResponseEntity<List<Route>> viewRouteList() throws InvalidRouteException {
 		List<Route> routes = routeService.viewRouteList();
 		
-		return new ResponseEntity<List<Route>>(routes, HttpStatus.FOUND);
+		return new ResponseEntity<List<Route>>(routes, HttpStatus.OK);
 	}
 	
 	/* ADMIN ONLY ACCESS */
@@ -71,6 +72,19 @@ public class RouteController {
 		Route deletedRoute = routeService.removeRoute(routeId, authKey);
 		
 		return new ResponseEntity<Route>(deletedRoute,HttpStatus.OK);
+	}
+	
+	@GetMapping("/fromTo")
+	public ResponseEntity<Route> findRouteFromTo(@RequestParam("from") String routeFrom,@RequestParam("to") String routeTo)throws InvalidRouteException{
+		Route route = routeService.getRouteFromTo(routeFrom, routeTo);
+		
+		return new ResponseEntity<Route>(route,HttpStatus.OK);
+	}
+	
+	@GetMapping("/book")
+	public ResponseEntity<Route> setJourneyDetails(@RequestParam("date") String date,@RequestParam("id") Integer routeId)throws InvalidRouteException{
+		Route route = routeService.setJourneyDateAndTime(date, routeId);
+		return new ResponseEntity<Route>(route,HttpStatus.OK);
 	}
 	
 	

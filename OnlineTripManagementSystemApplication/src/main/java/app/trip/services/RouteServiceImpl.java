@@ -1,5 +1,7 @@
 package app.trip.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -12,7 +14,6 @@ import app.trip.exceptions.InvalidRouteException;
 import app.trip.models.Bus;
 import app.trip.models.CurrentUserLoginSession;
 import app.trip.models.Route;
-import app.trip.models.Travel;
 import app.trip.repository.PackageRepository;
 import app.trip.repository.RouteRepository;
 import app.trip.repository.SessionRepository;
@@ -59,15 +60,6 @@ public class RouteServiceImpl implements RouteService {
 		}
 		
 		if(userType.equalsIgnoreCase("admin")) {
-			
-//			Optional<Travel> travelOpt = travelRepo.findById(travelId);
-//			
-//			if(travelOpt.isPresent()) {
-//				Travel travel = travelOpt.get();
-//				route.setTravelId(travel);				
-//			}
-			
-
 			
 			Set<Bus> buses=route.getTravelId().getBuses();
 			for(Bus b:buses) {
@@ -162,6 +154,31 @@ public class RouteServiceImpl implements RouteService {
 		}
 		
 		return searchedRoutes;
+	}
+
+	@Override
+	public Route getRouteFromTo(String routeFrom, String routeTo) throws InvalidRouteException {
+		// TODO Auto-generated method stub
+		Optional<Route> route = routeRepo.findByRoutefromAndRouteTo(routeFrom, routeTo);
+		if(route.isPresent()) {
+			return route.get();
+		}
+		throw new InvalidRouteException("Route Not Found...");
+	}
+
+	@Override
+	public Route setJourneyDateAndTime(String date, Integer routeId) throws InvalidRouteException {
+		Optional<Route> route = routeRepo.findById(routeId);
+		if(route.isPresent()) {
+			LocalDate dt = LocalDate.parse(date);
+			route.get().setDateOfJourney(dt);
+			LocalDateTime arrival = dt.atTime(15, 30);
+			LocalDateTime depart = dt.atTime(15, 45);
+			route.get().setArrivalTime(arrival);
+			route.get().setDepartureTime(depart);
+			return routeRepo.save(route.get());	
+		}
+		throw new InvalidRouteException("Invalid Route Id...");
 	}
 	
 }

@@ -12,6 +12,7 @@ public interface UserAuthenticationServices {
 	public SessionDTO userLogin(UserDTO user)throws InvalidCredentialException;
 	public String userLogout(String authKey)throws InvalidCredentialException;
 	public boolean updateUser(User user)throws InvalidCredentialException;
+	public User getUser(String authKey)throws InvalidCredentialException;
 	
 	// Admin access only
 	public User deleteUser(Integer userId,String authKey)throws InvalidCredentialException;

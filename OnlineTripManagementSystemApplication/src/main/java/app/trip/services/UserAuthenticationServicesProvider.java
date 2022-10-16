@@ -120,5 +120,17 @@ public class UserAuthenticationServicesProvider implements UserAuthenticationSer
 		if(!user.isPresent())throw new InvalidCredentialException("User doesn't exits with Id "+userId);
 		userRepo.delete(user.get());
 		return user.get();
-	}	
+	}
+
+	@Override
+	public User getUser(String authKey) throws InvalidCredentialException {
+		Optional<CurrentUserLoginSession> culs = sessionRepo.findByAuthkey(authKey);
+		if(!culs.isPresent()) {
+			throw new InvalidCredentialException("Invalid Authentication Key");
+		}
+		Optional<User> user = userRepo.findById(culs.get().getUserId());
+		return user.get();
+	}
+	
+	
 }

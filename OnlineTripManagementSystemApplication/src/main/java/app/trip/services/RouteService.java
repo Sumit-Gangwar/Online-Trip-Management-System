@@ -1,5 +1,6 @@
 package app.trip.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import app.trip.exceptions.AccessDeniedException;
@@ -20,5 +21,9 @@ public interface RouteService {
 	public Route searchRoute(Integer routeId) throws InvalidRouteException;
 	
 	public List<Route> viewRouteList() throws InvalidRouteException;
+	
+	public Route setJourneyDateAndTime(String date,Integer routeId)throws InvalidRouteException;
+	
+	public Route getRouteFromTo(String routeFrom,String routeTo)throws InvalidRouteException;
 	
 }
