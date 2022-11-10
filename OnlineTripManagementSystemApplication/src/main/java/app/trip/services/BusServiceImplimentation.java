@@ -3,18 +3,20 @@ package app.trip.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.trip.exceptions.BusException;
+import app.trip.exceptions.InvalidRouteException;
 import app.trip.exceptions.TravelException;
 import app.trip.models.Bus;
 import app.trip.models.CurrentUserLoginSession;
+import app.trip.models.Route;
 import app.trip.models.Travel;
 import app.trip.models.User;
 import app.trip.repository.BusRepository;
+import app.trip.repository.RouteRepository;
 import app.trip.repository.SessionRepository;
 import app.trip.repository.TravelRepository;
 import app.trip.repository.UserRepository;
@@ -34,7 +36,8 @@ public class BusServiceImplimentation implements BusService{
 	@Autowired
 	private BusRepository bRepo;
 	
-	
+	@Autowired
+	private RouteRepository routeRepo;
 
 
 	@Override
@@ -43,17 +46,7 @@ public class BusServiceImplimentation implements BusService{
 		List<Travel> travelList=tDao.findAll();
 		
 		if(travelList.size()>0) {
-			
-			
-			for(Travel t:travelList) {
-				Set<Bus> busList3=t.getBuses();
-				List<Bus> busList2=new ArrayList<>(busList3);
-				if(busList2.size()>0) {
-					for(Bus b:busList2) {
-						busList.add(b);
-					}
-				}
-			}
+			busList = bRepo.findAll();
 			return busList;
 		}
 		else
@@ -63,7 +56,7 @@ public class BusServiceImplimentation implements BusService{
 
 
 	@Override
-	public Bus addBus(Bus bus,Integer travelId, String authKey) throws TravelException {
+	public Bus addBus(Bus bus,Integer travelId, String authKey) throws TravelException,InvalidRouteException {
 
 		 Bus b=null;
 		    Optional<CurrentUserLoginSession> opt=sRepo.findByAuthkey(authKey);
@@ -78,26 +71,17 @@ public class BusServiceImplimentation implements BusService{
 			    	  
 			    	  if(user.getUserType().equals("admin")) {
 			    		 Optional<Travel> getTravel= tDao.findById(travelId);
-			    		 
 			    		 if(!getTravel.isPresent()) {
 			    			 throw new TravelException("Travel Id does not match");
 			    		 }
-			    		 else {
-
                            Travel travels=getTravel.get();
-                           
                            bus.setTDetails(travels);
-                           
-
-                         b=bRepo.save(bus);
-                           
-			    		 }
+                           b=bRepo.save(bus);   
 			    		 
 			    	  }
 			    	  else {
 			    		  throw new TravelException("Only Admin have to Access this.");
-			    	  }
-			    	  
+			    	  }	  
 		    }
 			return b;
 	}

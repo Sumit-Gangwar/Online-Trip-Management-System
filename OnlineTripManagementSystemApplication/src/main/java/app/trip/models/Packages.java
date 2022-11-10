@@ -3,13 +3,13 @@ package app.trip.models;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -49,10 +49,11 @@ public class Packages {
 	@OneToMany(mappedBy = "packages" ,cascade = CascadeType.ALL)
 	private List<Ticket> ticketDetails;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "packages")
 	private List<Hotel> hotelDetails;
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "package_id",referencedColumnName = "bookingId")
 	private Booking bookingDetails;
 }

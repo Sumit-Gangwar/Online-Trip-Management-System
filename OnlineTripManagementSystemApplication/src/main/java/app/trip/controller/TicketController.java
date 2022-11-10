@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.trip.exceptions.InvalidCredentialException;
 import app.trip.exceptions.InvalidRouteException;
 import app.trip.exceptions.InvalidTicketException;
 import app.trip.exceptions.PackageException;
@@ -54,10 +55,10 @@ public class TicketController {
 	
 	// creates a ticket
 	@PostMapping("/createTicket")
-	public ResponseEntity<Ticket> createTicket(@Valid @RequestBody Ticket ticket, @RequestParam Integer packageId, @RequestParam Integer routeId) throws InvalidTicketException, InvalidRouteException, PackageException {
+	public ResponseEntity<Ticket> createTicket(@Valid @RequestBody Ticket ticket,@RequestParam("key") String authKey, @RequestParam(required = false,defaultValue = "0") Integer packageId, @RequestParam Integer busId) throws InvalidTicketException, InvalidRouteException, PackageException, InvalidCredentialException {
 		Ticket createdTicket = null;
 		
-		createdTicket = ticketService.createTicket(ticket, packageId, routeId);
+		createdTicket = ticketService.createTicket(ticket,authKey, packageId, busId);
 		
 		return new ResponseEntity<Ticket>(createdTicket,HttpStatus.CREATED);
 	}

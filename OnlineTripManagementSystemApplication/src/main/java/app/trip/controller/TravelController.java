@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.trip.exceptions.TravelException;
@@ -26,9 +27,9 @@ public class TravelController {
 	private TravelService tService;
 	
 	@PostMapping("/travels/{key}")
-	public ResponseEntity<Travel> addTravle(@PathVariable("key") String key,@RequestBody Travel travel) throws TravelException{
+	public ResponseEntity<Travel> addTravle(@PathVariable("key") String key,@RequestParam("id") Integer routeId,@RequestBody Travel travel) throws TravelException{
 		
-		Travel travels=tService.addTravels(travel, key);
+		Travel travels=tService.addTravels(travel,routeId, key);
 	
 		return new ResponseEntity<>(travels,HttpStatus.CREATED);
 	

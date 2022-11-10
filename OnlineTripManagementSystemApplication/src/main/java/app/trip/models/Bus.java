@@ -7,8 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,50 +36,7 @@ public class Bus {
 	
 	@JsonIgnore
 	@ManyToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name = "travel_id")
 	private Travel tDetails;
-	
-	
-
-//	public Integer getBusId() {
-//		return busId;
-//	}
-//
-//	public void setBusId(Integer busId) {
-//		this.busId = busId;
-//	}
-//
-//	public BusType getBusType() {
-//		return busType;
-//	}
-//
-//	public void setBusType(BusType busType) {
-//		this.busType = busType;
-//	}
-//
-//	public Integer getBusNo() {
-//		return busNo;
-//	}
-//
-//	public void setBusNo(Integer busNo) {
-//		this.busNo = busNo;
-//	}
-//
-//	public Integer getCapacity() {
-//		return capacity;
-//	}
-//
-//	public void setCapacity(Integer capacity) {
-//		this.capacity = capacity;
-//	}
-//
-//	public Travel gettDetails() {
-//		return tDetails;
-//	}
-//
-//	public void settDetails(Travel tDetails) {
-//		this.tDetails = tDetails;
-//	}
-//    
-//    
 
 }

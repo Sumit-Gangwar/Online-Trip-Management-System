@@ -10,13 +10,14 @@ import app.trip.exceptions.InvalidCredentialException;
 import app.trip.exceptions.InvalidRouteException;
 import app.trip.exceptions.InvalidTicketException;
 import app.trip.exceptions.PackageException;
+import app.trip.models.Bus;
 import app.trip.models.CurrentUserLoginSession;
 import app.trip.models.Packages;
-import app.trip.models.Route;
 import app.trip.models.Ticket;
+import app.trip.models.User;
+import app.trip.repository.BusRepository;
 import app.trip.repository.PackageRepository;
 import app.trip.repository.RouteRepository;
-
 import app.trip.repository.SessionRepository;
 import app.trip.repository.TicketRepository;
 import app.trip.repository.UserRepository;
@@ -39,6 +40,9 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Autowired
 	RouteRepository routeRepo;
+	
+	@Autowired
+	BusRepository busRepo;
 
 	@Override
 	public List<Ticket> getAllTickets(Integer packageId,String authKey) throws InvalidTicketException {
@@ -53,7 +57,7 @@ public class TicketServiceImpl implements TicketService {
 			Packages packages = pkg.get();
 			tickets = ticketRepo.findByPackages(packages);
 		} else if(userType.equalsIgnoreCase("admin") && packageId == null) {
-			tickets = ticketRepo.findAll();			
+			tickets = ticketRepo.findAll();
 		} else if(userType.equalsIgnoreCase("admin") && packageId != null) {
 			Optional<Packages> pkg = pkgRepo.findById(packageId);
 			Packages packages = pkg.get();
@@ -61,7 +65,6 @@ public class TicketServiceImpl implements TicketService {
 		} else {
 			throw new InvalidTicketException("Please enter package Id.");
 		}
-		
 		if(tickets.isEmpty() || tickets == null) {
 			throw new InvalidTicketException("Tickets Not Available.");
 		}
@@ -85,20 +88,23 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public Ticket createTicket(Ticket ticket, Integer packageId, Integer routeId) throws InvalidTicketException, PackageException, InvalidRouteException  {
-		
+	public Ticket createTicket(Ticket ticket,String authKey, Integer packageId, Integer busId) throws InvalidTicketException, PackageException, InvalidRouteException, InvalidCredentialException  {
+		Optional<CurrentUserLoginSession> culs = sessionRepo.findByAuthkey(authKey);
+		if(!culs.isPresent()) {
+			throw new InvalidCredentialException("Please Login First...");
+		}
+		Optional<User> user = userRepo.findById(culs.get().getUserId());
 		Optional<Packages> pkgOpt = pkgRepo.findById(packageId);
-		if(pkgOpt.isEmpty()) {
-			throw new PackageException("Package with package id = "+packageId+" does not exist.");
+		if(pkgOpt.isPresent()) {
+			ticket.setPackages(pkgOpt.get());
+		}
+		Optional<Bus> busOpt = busRepo.findById(busId);
+		if(!busOpt.isPresent()) {
+			throw new InvalidRouteException("Bus with bus id = "+busId+" does not exist.");
 		}
 		
-		Optional<Route> routeOpt = routeRepo.findById(routeId);
-		if(routeOpt.isEmpty()) {
-			throw new InvalidRouteException("Route with route id = "+routeId+" does not exist.");
-		}
-		
-		ticket.setPackages(pkgOpt.get());
-		ticket.setRoute(routeOpt.get());
+
+		ticket.setBus(busOpt.get());
 		
 		Ticket ticketCreated  = ticketRepo.save(ticket);
 		

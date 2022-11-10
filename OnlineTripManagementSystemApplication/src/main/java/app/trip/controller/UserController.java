@@ -34,7 +34,7 @@ public class UserController {
 	@PostMapping("/signup")
 	public ResponseEntity<String> userSignUp(@Valid @RequestBody User user)throws UserAlreadyExistsException{
 		service.userSingUp(user);
-		return new ResponseEntity<String>("Registered Successfully",HttpStatus.CREATED);
+		return new ResponseEntity<String>("Registered Successfully",HttpStatus.OK);
 	}
 	
 	@PostMapping("/login")

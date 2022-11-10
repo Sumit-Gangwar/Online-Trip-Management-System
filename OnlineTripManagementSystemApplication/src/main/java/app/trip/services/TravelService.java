@@ -9,7 +9,7 @@ public interface TravelService {
 	
 	
 	
-	public Travel addTravels(Travel travel , String authKey) throws TravelException;
+	public Travel addTravels(Travel travel ,Integer routeId, String authKey) throws TravelException;
 	
 	public Travel updateTravels(Travel travel,String authKey) throws TravelException;
 

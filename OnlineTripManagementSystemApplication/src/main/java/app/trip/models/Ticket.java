@@ -51,9 +51,10 @@ public class Ticket {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "packageId")
 	private Packages packages;
+
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "routeId")
-	private Route route;
+	@JoinColumn(name = "bus_id",referencedColumnName = "busId")
+	private Bus bus;
 }

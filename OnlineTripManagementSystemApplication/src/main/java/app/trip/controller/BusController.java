@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.trip.exceptions.BusException;
+import app.trip.exceptions.InvalidRouteException;
 import app.trip.exceptions.TravelException;
 import app.trip.models.Bus;
 import app.trip.services.BusService;
@@ -33,10 +34,10 @@ public class BusController {
 	
 	}
 	
-	@PostMapping("/busesAdd/{travelId}/{authKey}")
-	public ResponseEntity<Bus> addTravle(@RequestBody Bus bus,@PathVariable("travelId") Integer travelId,@PathVariable("authKey") String authKey) throws TravelException{
+	@PostMapping("/busesAdd/{tid}/{key}")
+	public ResponseEntity<Bus> addTravle(@RequestBody Bus bus,@PathVariable("tid") Integer travelId, @PathVariable("key") String authKey) throws TravelException, InvalidRouteException{
 		
-		Bus buses=bService.addBus(bus, travelId, authKey);
+		Bus buses=bService.addBus(bus, travelId,authKey);
 	
 		return new ResponseEntity<>(buses,HttpStatus.CREATED);
 	

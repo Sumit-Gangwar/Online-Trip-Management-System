@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -30,13 +30,14 @@ public class Booking {
 	private String bookingTitle;
 	private LocalDateTime date;
 	
-//	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
-	private List<User> users = new ArrayList<>();
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id",referencedColumnName = "userId")
+	private User user;
 	
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "package_f_id", referencedColumnName = "packageId")
+    @JoinColumn(name = "package_id", referencedColumnName = "packageId")
     private Packages packages;
 	
 }

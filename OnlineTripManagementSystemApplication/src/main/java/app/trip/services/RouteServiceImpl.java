@@ -4,16 +4,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.trip.exceptions.AccessDeniedException;
 import app.trip.exceptions.InvalidRouteException;
-import app.trip.models.Bus;
 import app.trip.models.CurrentUserLoginSession;
 import app.trip.models.Route;
+import app.trip.models.Travel;
 import app.trip.repository.PackageRepository;
 import app.trip.repository.RouteRepository;
 import app.trip.repository.SessionRepository;
@@ -61,10 +60,10 @@ public class RouteServiceImpl implements RouteService {
 		
 		if(userType.equalsIgnoreCase("admin")) {
 			
-			Set<Bus> buses=route.getTravelId().getBuses();
-			for(Bus b:buses) {
-				b.setTDetails(route.getTravelId());
-			}
+//			List<Travel> travels = route.getTravel();
+//			for(Travel t:travels) {
+//				t.setRoute(route);
+//			}
 			createdRoute = routeRepo.save(route);
 		} else {
 			throw new AccessDeniedException("User is unauthorized for performing this function.");

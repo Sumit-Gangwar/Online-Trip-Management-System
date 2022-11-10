@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -40,7 +40,7 @@ public class User {
 	@JsonIgnore
 	private String userType = "User";
 	
-	@Email(message = "Invalid Email Address.")
+	@Email(message = "Invalid Email Address.")@Column(unique = true)
 	private String email;
 	
 	@Pattern(regexp = "[A-Za-z0-9@]{6,15}",message = "Password must be 6 to 15 characters and must have at least 1 alphabate and 1 number")
@@ -48,10 +48,14 @@ public class User {
 	private String password;
 
 	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
 	private List<Booking> bookings = new ArrayList<>();
 	
 	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
 	private List<Feedback> feedbacks = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+	private List<Report> reports = new ArrayList<>();
 }

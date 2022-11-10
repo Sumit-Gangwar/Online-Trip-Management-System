@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import app.trip.exceptions.TravelException;
 import app.trip.models.Bus;
 import app.trip.models.CurrentUserLoginSession;
+import app.trip.models.Route;
 import app.trip.models.Travel;
 import app.trip.models.User;
+import app.trip.repository.RouteRepository;
 import app.trip.repository.SessionRepository;
 import app.trip.repository.TravelRepository;
 import app.trip.repository.UserRepository;
@@ -27,23 +29,12 @@ public class TravelServiceImplementation implements TravelService{
 	
 	@Autowired
 	private UserRepository uRepo;
-
-//	@Override
-//	public Travel addTravels(Travel travel) {
-////		Integer id=travel.getTravelId();
-//		
-////		Set<Bus> buses=travel.getBuses();
-////		
-//////		for(Bus b:buses) {
-////           
-////			travel.setBuses(buses);
-//			
-////		}
-//		
-//	}
+	
+	@Autowired
+	private RouteRepository routeRepo;
 
 	@Override
-	public Travel addTravels(Travel travel, String authKey) throws TravelException {
+	public Travel addTravels(Travel travel,Integer routeId, String authKey) throws TravelException {
       Travel t=null;
        Optional<CurrentUserLoginSession> opt=sRepo.findByAuthkey(authKey);
 	
@@ -54,13 +45,18 @@ public class TravelServiceImplementation implements TravelService{
     	   CurrentUserLoginSession loginSession=opt.get();
 	    	 Optional<User> optUser=uRepo.findById(loginSession.getUserId());
 	    	  User user=optUser.get();
-	    	  
+
 	    	  if(user.getUserType().equals("admin")) {
 	    		 	
 	    		Set<Bus> buses= travel.getBuses();
 	    		for(Bus b:buses) {
 	    			b.setTDetails(travel);
 	    		}
+		    	  Optional<Route> route = routeRepo.findById(routeId);
+	    		  if(!route.isPresent()) {
+		    		  throw new TravelException("Route Doesn't Exist With Id "+routeId);
+		    	  }
+	    		  travel.setRoute(route.get());
 	    		t= tDao.save(travel);	
 	    	  }
 	    	  else {

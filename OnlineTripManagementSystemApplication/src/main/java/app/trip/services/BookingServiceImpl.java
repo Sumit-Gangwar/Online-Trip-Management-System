@@ -3,17 +3,23 @@ package app.trip.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.trip.exceptions.BookingException;
+import app.trip.exceptions.InvalidCredentialException;
 import app.trip.models.Booking;
 import app.trip.models.CurrentUserLoginSession;
 import app.trip.models.Packages;
+import app.trip.models.SessionDTO;
+import app.trip.models.Ticket;
 import app.trip.models.User;
 import app.trip.repository.BookingRepository;
 import app.trip.repository.PackageRepository;
 import app.trip.repository.SessionRepository;
+import app.trip.repository.TicketRepository;
 import app.trip.repository.UserRepository;
 
 @Service
@@ -31,22 +37,26 @@ public class BookingServiceImpl implements BookingService{
 	@Autowired
 	UserRepository userRepo;
 	
+	@Autowired
+	TicketRepository tRepo;
+	
 	/*
 	 * Need get/setBookings 
 	 */
 	@Override
-	public Booking makeBooking(Booking bookings, Integer pkgId) throws BookingException {
-		Optional<Packages> packagesOpt = pkgRepo.findById(pkgId);
-		
-		if(packagesOpt.isPresent()) {
-			List<User> users = bookings.getUsers();
-			for(User user:users) {
-				 user.getBookings().add(bookings);
-			}
-			bookings.setPackages(packagesOpt.get());
+	public Booking makeBooking(Booking bookings, Integer ticketId,String authKey) throws BookingException,InvalidCredentialException {
+		Optional<CurrentUserLoginSession> session = sessionRepo.findByAuthkey(authKey);
+		if(!session.isPresent())throw new InvalidCredentialException("Please Login First...");
+		Optional<User> user = userRepo.findById(session.get().getUserId());
+		Optional<Ticket> ticketOpt = tRepo.findById(ticketId);
+
+		if(ticketOpt.isPresent()) {
+			bookings.setUser(user.get());
+			Packages pkg = ticketOpt.get().getPackages();
+			if(pkg!=null)bookings.setPackages(pkg);
 			return bookRepo.save(bookings);
 		}else {
-			throw new BookingException("Provide valid package... ");
+			throw new BookingException("Provide valid ticket id... ");
 		}	
 	}
 	
@@ -57,10 +67,11 @@ public class BookingServiceImpl implements BookingService{
 		Optional<Booking> book = bookRepo.findById(bookingsId);
 		if(book.isPresent()) {
 			booking = book.get();
-			List<User> users = booking.getUsers();
-			for(User user:users) {
-				 user.getBookings().remove(booking);
-			}
+			User user = booking.getUser();
+//			for(User user:users) {
+//				 user.getBookings().remove(booking);
+//			}
+			user.getBookings().remove(booking);
 			bookRepo.delete(booking);
 			return booking;
 		}else {

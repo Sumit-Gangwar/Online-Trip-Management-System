@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.trip.exceptions.BookingException;
+import app.trip.exceptions.InvalidCredentialException;
 import app.trip.models.Booking;
 import app.trip.services.BookingService;
 
@@ -37,9 +38,9 @@ public class BookingController {
 	
 
 	@PostMapping("/book")
-	public ResponseEntity<Booking> makeBookings (@Valid @RequestBody Booking booking, @RequestParam Integer pkgId) throws BookingException{
+	public ResponseEntity<Booking> makeBookings (@Valid @RequestBody Booking booking, @RequestParam Integer ticketId,@RequestParam String key) throws BookingException,InvalidCredentialException{
 		Booking createBooking = null;
-		createBooking = bookingService.makeBooking(booking, pkgId);
+		createBooking = bookingService.makeBooking(booking, ticketId,key);
 		return new ResponseEntity<Booking>(createBooking, HttpStatus.CREATED);
 	}
 	
