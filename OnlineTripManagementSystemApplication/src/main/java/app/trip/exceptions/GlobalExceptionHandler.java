@@ -12,17 +12,6 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 	
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorDetails> OtherExceptionHandler(Exception exp, WebRequest req){
-		ErrorDetails authEx = new ErrorDetails();
-		authEx.setTimestamp(LocalDateTime.now());
-		authEx.setMessage(exp.getMessage());
-		authEx.setDescription(req.getDescription(false));
-		
-		return new ResponseEntity<ErrorDetails>(authEx,HttpStatus.BAD_REQUEST);
-	}
-	
-	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ErrorDetails> MethodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exp) {
 		
@@ -71,5 +60,18 @@ public class GlobalExceptionHandler {
 		ped.setMessage(pe.getMessage());
 		ped.setDescription(req.getDescription(false));
 		return new ResponseEntity<ErrorDetails>(ped,HttpStatus.BAD_REQUEST);
+		
+		
 	}
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorDetails> OtherExceptionHandler(Exception exp, WebRequest req){
+		ErrorDetails authEx = new ErrorDetails();
+		authEx.setTimestamp(LocalDateTime.now());
+		authEx.setMessage(exp.getMessage());
+		authEx.setDescription(req.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(authEx,HttpStatus.BAD_REQUEST);
+	}
+	
 }

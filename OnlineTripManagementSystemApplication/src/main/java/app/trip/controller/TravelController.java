@@ -2,6 +2,8 @@ package app.trip.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class TravelController {
 	private TravelService tService;
 	
 	@PostMapping("/travels/{key}")
-	public ResponseEntity<Travel> addTravle(@PathVariable("key") String key,@RequestParam("id") Integer routeId,@RequestBody Travel travel) throws TravelException{
+	public ResponseEntity<Travel> addTravle(@PathVariable("key") String key,@RequestParam("id") Integer routeId,@RequestBody @Valid Travel travel) throws TravelException{
 		
 		Travel travels=tService.addTravels(travel,routeId, key);
 	
@@ -36,7 +38,7 @@ public class TravelController {
 	}
 	
 	@PutMapping("/travelsUpdate/{key}")
-	public ResponseEntity<Travel> updateTravle(@PathVariable("key") String key,@RequestBody Travel travel) throws TravelException{
+	public ResponseEntity<Travel> updateTravle(@PathVariable("key") String key,@RequestBody @Valid Travel travel) throws TravelException{
 		
 		Travel travels=tService.updateTravels(travel,key);
 	

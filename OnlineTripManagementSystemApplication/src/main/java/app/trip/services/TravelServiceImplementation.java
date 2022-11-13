@@ -90,21 +90,17 @@ public Travel updateTravels(Travel travel, String authKey) throws TravelExceptio
 	    		 }
 	    		 else {
 	    			Set<Bus> busSet= travel.getBuses();
-	    			
 	    			for(Bus b:busSet) {
 	    				b.setTDetails(travel);
 	    			}
 	    			 t=tDao.save(travel);
 	    		 }
-	    		 
 	    	  }
 	    	  else {
 	    		  throw new TravelException("Only Admin have to Access this.");
 	    	  }
-	    	  
     }
-	return t;
-	 
+	return t; 
 }
 
 @Override
@@ -130,46 +126,36 @@ public Travel removeTravels(Integer travelId, String authKey) throws TravelExcep
 		    		 else {
                          t= findTravel.get();
                          tDao.delete(t);
-                         
-                        
 		    		 }
-		    		 
 		    	  }
 		    	  else {
 		    		  throw new TravelException("Only Admin have to Access this.");
-		    	  }
-		    	  
+		    	  }  
 	    }
 		return t;
-		
 }
 
-@Override
-public Travel serchTravels(Integer travelId) throws TravelException {
-
-     Optional<Travel> opt=tDao.findById(travelId);
-     
-     if(opt.isPresent()) {
-    	return opt.get();
-     }
-     else
-    	 throw new TravelException("Travel Agency not found with : "+travelId);
-}
-
-@Override
-public List<Travel> viewTravels() throws TravelException {
-
-      List<Travel> travelList= tDao.findAll();
-      if(travelList.size()>0) {
-    	  return travelList;
-      }
-      else
-    	  throw new TravelException("No any Travel Agency is present");
-}
-
-
+	@Override
+	public Travel serchTravels(Integer travelId) throws TravelException {
 	
+	     Optional<Travel> opt=tDao.findById(travelId);
+	     
+	     if(opt.isPresent()) {
+	    	return opt.get();
+	     }
+	     else
+	    	 throw new TravelException("Travel Agency not found with : "+travelId);
+	}
+
+	@Override
+	public List<Travel> viewTravels() throws TravelException {
 	
+	      List<Travel> travelList= tDao.findAll();
+	      if(travelList.size()>0) {
+	    	  return travelList;
+	      }
+	      else
+	    	  throw new TravelException("No any Travel Agency is present");
+		}
 	
-	
-}
+	}

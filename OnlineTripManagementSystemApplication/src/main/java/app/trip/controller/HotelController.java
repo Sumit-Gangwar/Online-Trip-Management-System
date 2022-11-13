@@ -1,5 +1,7 @@
 package app.trip.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class HotelController {
 	HotelService hotelService;
 	
 	@PostMapping("/hotel/add/{key}/{packageId}")
-	public ResponseEntity<Hotel> hotelAdd(@RequestBody Hotel hotel,@PathVariable("key") String key,@PathVariable("packageId") Integer packageId)throws HotelException{
+	public ResponseEntity<Hotel> hotelAdd(@RequestBody @Valid Hotel hotel,@PathVariable("key") String key,@PathVariable("packageId") Integer packageId)throws HotelException{
 		Hotel returnedHotel=hotelService.addHotel(packageId,hotel, key);
 		return new ResponseEntity<Hotel>(returnedHotel,HttpStatus.CREATED);
 	}
@@ -36,7 +38,7 @@ public class HotelController {
 		return new ResponseEntity<Hotel>(returnedHotel,HttpStatus.OK);
 	}
 	@PutMapping("/hotel/update/{key}")
-	public ResponseEntity<Hotel> updateHotel(@RequestBody Hotel hotel,@PathVariable("key") String key) throws HotelException{
+	public ResponseEntity<Hotel> updateHotel(@RequestBody @Valid Hotel hotel,@PathVariable("key") String key) throws HotelException{
 		Hotel returnedHotel=hotelService.updateHotel(hotel, key);
 		return new ResponseEntity<Hotel>(returnedHotel,HttpStatus.OK);
 	}

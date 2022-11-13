@@ -2,6 +2,8 @@ package app.trip.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class BusController {
 	}
 	
 	@PostMapping("/busesAdd/{tid}/{key}")
-	public ResponseEntity<Bus> addTravle(@RequestBody Bus bus,@PathVariable("tid") Integer travelId, @PathVariable("key") String authKey) throws TravelException, InvalidRouteException{
+	public ResponseEntity<Bus> addTravle(@RequestBody @Valid Bus bus,@PathVariable("tid") Integer travelId, @PathVariable("key") String authKey) throws TravelException, InvalidRouteException{
 		
 		Bus buses=bService.addBus(bus, travelId,authKey);
 	

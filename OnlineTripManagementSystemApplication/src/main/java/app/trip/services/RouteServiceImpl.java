@@ -52,18 +52,13 @@ public class RouteServiceImpl implements RouteService {
 		
 		String userType = userRepo.findById(culs.get().getUserId()).get().getUserType();
 		
-		Optional<Route> optRoute = routeRepo.findById(route.getRouteId());
+		Optional<Route> optRoute = routeRepo.findByRoutefromAndRouteTo(route.getRoutefrom(), route.getRouteTo());
 		
 		if(optRoute.isPresent()) {
-			throw new InvalidRouteException("Route No "+route.getRouteId()+" aleady exists.");
+			throw new InvalidRouteException("Route No "+optRoute.get().getRouteId()+" aleady exists.");
 		}
 		
 		if(userType.equalsIgnoreCase("admin")) {
-			
-//			List<Travel> travels = route.getTravel();
-//			for(Travel t:travels) {
-//				t.setRoute(route);
-//			}
 			createdRoute = routeRepo.save(route);
 		} else {
 			throw new AccessDeniedException("User is unauthorized for performing this function.");

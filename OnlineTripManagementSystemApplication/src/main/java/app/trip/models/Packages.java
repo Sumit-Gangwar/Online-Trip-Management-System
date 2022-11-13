@@ -51,9 +51,5 @@ public class Packages {
 	
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "packages")
 	private List<Hotel> hotelDetails;
-	
-	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "package_id",referencedColumnName = "bookingId")
-	private Booking bookingDetails;
+
 }

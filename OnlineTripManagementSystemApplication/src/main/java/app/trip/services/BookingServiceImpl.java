@@ -3,17 +3,14 @@ package app.trip.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.trip.exceptions.BookingException;
 import app.trip.exceptions.InvalidCredentialException;
 import app.trip.models.Booking;
+import app.trip.models.BookingStatus;
 import app.trip.models.CurrentUserLoginSession;
-import app.trip.models.Packages;
-import app.trip.models.SessionDTO;
 import app.trip.models.Ticket;
 import app.trip.models.User;
 import app.trip.repository.BookingRepository;
@@ -39,10 +36,7 @@ public class BookingServiceImpl implements BookingService{
 	
 	@Autowired
 	TicketRepository tRepo;
-	
-	/*
-	 * Need get/setBookings 
-	 */
+
 	@Override
 	public Booking makeBooking(Booking bookings, Integer ticketId,String authKey) throws BookingException,InvalidCredentialException {
 		Optional<CurrentUserLoginSession> session = sessionRepo.findByAuthkey(authKey);
@@ -52,8 +46,8 @@ public class BookingServiceImpl implements BookingService{
 
 		if(ticketOpt.isPresent()) {
 			bookings.setUser(user.get());
-			Packages pkg = ticketOpt.get().getPackages();
-			if(pkg!=null)bookings.setPackages(pkg);
+			bookings.setTicket(ticketOpt.get());
+			bookings.setStatus(BookingStatus.Booked);
 			return bookRepo.save(bookings);
 		}else {
 			throw new BookingException("Provide valid ticket id... ");
@@ -68,24 +62,17 @@ public class BookingServiceImpl implements BookingService{
 		if(book.isPresent()) {
 			booking = book.get();
 			User user = booking.getUser();
-//			for(User user:users) {
-//				 user.getBookings().remove(booking);
-//			}
 			user.getBookings().remove(booking);
-			bookRepo.delete(booking);
-			return booking;
+			booking.setStatus(BookingStatus.Cancelled);
+			Ticket t = booking.getTicket();
+			t.setTicketStatus(false);
+			tRepo.save(t);
+			return bookRepo.save(booking);
 		}else {
 			throw new BookingException("Booking not exists");
 		}
 				
 	}
-	
-	/*
-	 * entityManager.remove(group)
-		for (User user : group.users) {
-		     user.groups.remove(group);
-		}
-	 */
 
 	@Override
 	public List<Booking> viewBookings(Integer userId) throws BookingException {

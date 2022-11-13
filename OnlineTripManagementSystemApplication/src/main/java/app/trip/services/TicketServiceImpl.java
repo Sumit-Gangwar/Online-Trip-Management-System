@@ -3,6 +3,8 @@ package app.trip.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,19 +53,19 @@ public class TicketServiceImpl implements TicketService {
 		Optional<CurrentUserLoginSession> culs = sessionRepo.findByAuthkey(authKey);
 		
 		String userType = userRepo.findById(culs.get().getUserId()).get().getUserType();
-				
+		System.out.println(packageId);		
 		if(userType.equalsIgnoreCase("user") && packageId != null) {
 			Optional<Packages> pkg = pkgRepo.findById(packageId);
 			Packages packages = pkg.get();
 			tickets = ticketRepo.findByPackages(packages);
-		} else if(userType.equalsIgnoreCase("admin") && packageId == null) {
+		} 
+		else if(userType.equalsIgnoreCase("admin") && packageId == null) {
 			tickets = ticketRepo.findAll();
-		} else if(userType.equalsIgnoreCase("admin") && packageId != null) {
+		}
+			else if(userType.equalsIgnoreCase("admin") && packageId != null) {
 			Optional<Packages> pkg = pkgRepo.findById(packageId);
 			Packages packages = pkg.get();
 			tickets = ticketRepo.findByPackages(packages);
-		} else {
-			throw new InvalidTicketException("Please enter package Id.");
 		}
 		if(tickets.isEmpty() || tickets == null) {
 			throw new InvalidTicketException("Tickets Not Available.");
@@ -74,17 +76,14 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Override
 	public Ticket getTicket(Integer ticketId) throws InvalidTicketException {
-		Ticket ticket = null;
 		
 		Optional<Ticket> tkt = ticketRepo.findById(ticketId);
 		
 		if(tkt.isPresent() == false) {
 			throw new InvalidTicketException("No such ticket exists.");
-		} else {
-			ticket = tkt.get();
 		}
 		
-		return ticket;
+		return tkt.get();
 	}
 	
 	@Override
@@ -120,12 +119,11 @@ public class TicketServiceImpl implements TicketService {
 		
 		if(user.isPresent()) {
 			ticket = user.get();
-			
-			ticketRepo.delete(ticket);
+			ticket.setTicketStatus(false);
+			ticketRepo.save(ticket);
 		} else {
 			throw new InvalidTicketException("Ticket does not exist....");			
 		}
-		
 		return ticket;
 	}
 }

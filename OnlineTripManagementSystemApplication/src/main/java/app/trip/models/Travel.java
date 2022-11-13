@@ -44,7 +44,7 @@ public class Travel {
 	@Embedded
 	private Address addr;
 	
-	@Pattern(regexp = "[0-9]{10}", message = "Contact should be of 10 digits")
+	@Pattern(regexp = "^[789][0-9]{9}", message = "Contact should be of 10 digits and contains first digit 7 OR 8 OR 9")
 	@NotNull
 	private String contact;
 	
@@ -57,8 +57,6 @@ public class Travel {
 	@JoinColumn(name = "route_id", referencedColumnName = "routeId")
 	private Route route;
 	
-	
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -78,8 +76,4 @@ public class Travel {
 		return Objects.hash(addr, agentName, contact, travelId, travelName);
 	}
 	
-	
-	
-	
-
 }

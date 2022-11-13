@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +29,9 @@ public class Booking {
 	private Integer bookingId;
 	private String bookingType;
 	private String description;
+	
+	@Enumerated(EnumType.STRING)
+	private BookingStatus status = BookingStatus.Not_Booked;
 	private String bookingTitle;
 	private LocalDateTime date;
 	
@@ -34,10 +39,10 @@ public class Booking {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id",referencedColumnName = "userId")
 	private User user;
-	
+
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "package_id", referencedColumnName = "packageId")
-    private Packages packages;
+	@JoinColumn(name = "ticket_id",referencedColumnName = "ticketId")
+	private Ticket ticket;
 	
 }

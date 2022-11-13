@@ -15,6 +15,4 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 	
 	public List<Ticket> findByPackages(Packages packages);
 	
-	//public List<Ticket> findByRouteId(Integer routeId);
-	
 }

@@ -2,6 +2,8 @@ package app.trip.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.trip.exceptions.FeedbackException;
-import app.trip.exceptions.HotelException;
 import app.trip.models.Feedback;
-import app.trip.models.Hotel;
 import app.trip.services.FeedbackService;
 
 @RestController
@@ -27,7 +27,7 @@ public class FeedbackController {
 	
 	
 	@PostMapping("/Feedback/add/{key}")
-	public ResponseEntity<Feedback> addFeedback(@RequestBody Feedback feedback,@PathVariable("key") String key)throws FeedbackException
+	public ResponseEntity<Feedback> addFeedback(@RequestBody @Valid Feedback feedback,@PathVariable("key") String key)throws FeedbackException
 	{
 		Feedback feedbackReturned=feedbackService.addFeedback(feedback, key);
 		return new ResponseEntity<Feedback>(feedbackReturned,HttpStatus.CREATED);

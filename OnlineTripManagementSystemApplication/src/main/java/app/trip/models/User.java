@@ -31,7 +31,7 @@ public class User {
 	@NotBlank @NotBlank @NotEmpty @Size(min = 3, max = 20,message = "Name must contain at least 3 characters")
 	private String name;
 	
-	@NotNull @Pattern(regexp = "[0-9]{10}",message = "Mobile number should be of 10 digits")
+	@NotNull @Pattern(regexp = "^[789][0-9]{9}",message = "Mobile number should be of 10 digits")
 	private String mobile;
   
 	@NotBlank @NotBlank @NotEmpty
