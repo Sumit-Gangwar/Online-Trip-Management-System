@@ -72,7 +72,7 @@ The following Diagram depicts the flow of our Entity Relation Diagram to simplif
 <br>
 <br>
   
- <img src='https://user-images.githubusercontent.com/101464018/201174800-02fed6fa-fc20-4833-94da-400327df17c3.png'/>
+ <img src='https://user-images.githubusercontent.com/101464018/201532557-608c199c-53cb-4b82-91d6-a5313da04eef.png'/>
 
 
 <br>
